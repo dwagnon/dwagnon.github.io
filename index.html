@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dylan Wagnon · Business Systems Analyst</title>
+  <style>
+    :root{
+      --bg:#0f172a; /* slate-900 */
+      --card:#111827; /* gray-900 */
+      --muted:#94a3b8; /* slate-400 */
+      --text:#e5e7eb; /* gray-200 */
+      --accent:#60a5fa; /* blue-400 */
+      --chip:#1f2937; /* gray-800 */
+      --ring:#3b82f6; /* blue-500 */
+      --danger:#ef4444;
+      --ok:#10b981;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(1200px 600px at 70% -10%, rgba(96,165,250,.2), transparent),radial-gradient(900px 500px at -10% 10%, rgba(100,116,139,.15), transparent),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:980px;margin:0 auto;padding:28px}
+    header{display:flex;gap:20px;align-items:center;justify-content:space-between;margin-top:8px}
+    .avatar{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);display:grid;place-items:center;font-weight:800;color:#0b1020;overflow:hidden}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .name h1{margin:0;font-size:28px;letter-spacing:.2px}
+    .name p{margin:4px 0 0;color:var(--muted)}
+    .cta{display:flex;flex-wrap:wrap;gap:10px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:#0b1222;border:1px solid #23314d;color:#dbeafe}
+    .btn:hover{border-color:#33508a;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+    .btn.secondary{background:transparent;color:#bfdbfe}
+    .section{margin:28px 0 10px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));border:1px solid rgba(148,163,184,.2);border-radius:16px;padding:22px}
+    h2{margin:0 0 12px;font-size:18px;letter-spacing:.3px;color:#fff}
+    .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+    .list{display:grid;gap:10px}
+    .list li{background:var(--chip);border:1px solid rgba(148,163,184,.18);padding:12px;border-radius:12px}
+    .muted{color:var(--muted)}
+    .pillbar{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{background:var(--chip);border:1px solid rgba(148,163,184,.18);padding:6px 10px;border-radius:999px;font-size:13px;color:#cbd5e1}
+    footer{margin:30px 0;color:var(--muted);font-size:14px}
+    .link{color:var(--accent)}
+    .fab{position:fixed;right:20px;bottom:20px;background:var(--accent);color:#05172c;border:none;border-radius:999px;padding:12px 14px;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(59,130,246,.35);display:none}
+    .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#0b1222;border:1px solid #1f2a44;color:#d1fae5;padding:10px 14px;border-radius:10px;display:none}
+    .toast.show{display:block}
+    @media (max-width:840px){.grid{grid-template-columns:1fr}}
+
+    /* Admin panel */
+    .panel{position:fixed;inset:auto 0 0 auto;right:20px;bottom:80px;width:360px;max-width:90vw;background:#0b1222;border:1px solid #23314d;border-radius:14px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.4);display:none}
+    .panel.open{display:block}
+    .panel h3{margin:0 0 10px;font-size:16px}
+    .panel label{display:block;font-size:12px;color:#9fb0c6;margin:10px 0 4px}
+    .panel input[type="text"], .panel input[type="url"], .panel input[type="password"]{width:100%;padding:8px 10px;border-radius:10px;border:1px solid #23314d;background:#060a14;color:#e5e7eb}
+    .panel .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+    .panel .muted{font-size:12px}
+    .danger{color:var(--danger);cursor:pointer;font-size:12px}
+
+    /* Inline editable visual hint */
+    [contenteditable="true"]{outline:2px dashed rgba(96,165,250,.35);outline-offset:4px;border-radius:8px;padding:2px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div style="display:flex;gap:14px;align-items:center">
+        <div class="avatar" id="avatarBox"><span id="avatarInitials">DW</span></div>
+        <div class="name">
+          <h1 id="name" data-editable>Dylan Wagnon</h1>
+          <p class="muted" id="tagline" data-editable>Business Systems Analyst · Customer Success Ops · Workflow & Data Automation</p>
+          <p class="muted">Allen, TX · <a class="link" href="mailto:dylanwagnon@outlook.com" id="emailLink" data-editable>dylanwagnon@outlook.com</a> · <span id="phone" data-editable>501‑606‑9654</span></p>
+        </div>
+      </div>
+      <nav class="cta">
+        <a class="btn" id="twoPdf" href="sandbox:/mnt/data/Dylan_Wagnon_Resume_TwoPage_UPDATED.pdf">⬇ Two‑Page PDF</a>
+        <a class="btn" id="onePdf" href="sandbox:/mnt/data/Dylan_Wagnon_Resume_OnePage_UPDATED.pdf">⬇ One‑Page PDF</a>
+        <a class="btn secondary" id="twoDocx" href="sandbox:/mnt/data/Dylan_Wagnon_Resume_TwoPage_Design_UPDATED.docx">DOCX</a>
+      </nav>
+    </header>
+
+    <section class="section grid">
+      <div class="card">
+        <h2>About</h2>
+        <p id="about" data-editable>
+          Strategy‑minded systems builder with a hands‑on record streamlining Sales → Onboarding → Support using
+          ClickUp and HubSpot. I led automation and operating cadence for a SaaS used by 300+ dealerships, built OEM
+          performance/retention reporting with SQL, and reduced ticket volume with knowledge‑base & chatbot programs.
+        </p>
+      </div>
+      <div class="card">
+        <h2>Quick Links</h2>
+        <div class="pillbar" id="quickLinks">
+          <a class="pill" id="coverDocx" href="sandbox:/mnt/data/Dylan_Wagnon_CoverLetter_ClickUp.docx">Cover Letter (DOCX)</a>
+          <a class="pill" id="oneDocx" href="sandbox:/mnt/data/Dylan_Wagnon_Resume_OnePage_Design.docx">One‑Pager (DOCX)</a>
+          <a class="pill" id="twoDocx2" href="sandbox:/mnt/data/Dylan_Wagnon_Resume_TwoPage_Design_UPDATED.docx">Two‑Pager (DOCX)</a>
+        </div>
+        <p class="muted" style="margin-top:10px" id="quickNote" data-editable>Prefer a simple link instead of LinkedIn? Use this page as your professional website.</p>
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2>Highlights</h2>
+      <ul class="list" id="highlights" data-editable>
+        <li><strong>Onboarding Ops:</strong> Designed scalable workflows in ClickUp & HubSpot to onboard <strong>300+ dealerships</strong>, cutting manual work and improving time‑to‑value.</li>
+        <li><strong>Data & Reporting:</strong> Built SQL‑driven reports for OEMs (Toyota, Lexus, Mercedes) on retention, adoption, and ops trends; packaged insights for leadership & partners.</li>
+        <li><strong>Automation & AI:</strong> Implemented knowledge base + chatbot flows (HubSpot Breeze) to deflect common tickets and drive CSAT.</li>
+        <li><strong>Cross‑Functional:</strong> Partnered with Sales, Support, Dev, and Ops to identify bottlenecks and launch process improvements end‑to‑end.</li>
+      </ul>
+    </section>
+
+    <section class="section grid">
+      <div class="card" id="experienceCard">
+        <h2>Experience</h2>
+        <div id="experience" data-editable>
+          <p><strong>Business Systems Analyst (Technical Liaison Manager)</strong> · Logitrac · <span class="muted">Mar 2025 – Present</span></p>
+          <ul class="list">
+            <li>Streamlined Sales → Onboarding → Helpdesk with HubSpot/ClickUp workflows and automations.</li>
+            <li>Created retention/adoption dashboards; partnered with Finance for custom SQL on billing, tolling, and expense recovery.</li>
+          </ul>
+          <p><strong>Business Development Manager</strong> · Logitrac · <span class="muted">Jan 2025 – Mar 2025</span></p>
+          <ul class="list">
+            <li>Owned vendor partnerships and integration roadmaps; delivered strategic partner/OEM reporting.</li>
+          </ul>
+          <p><strong>Technical Support Specialist</strong> · Logitrac · <span class="muted">Feb 2023 – Dec 2024</span></p>
+          <ul class="list">
+            <li>Tier‑2 SQL troubleshooting; QA (manual + Selenium); client training & onboarding (remote + onsite).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Skills</h2>
+        <div class="pillbar" id="skills" data-editable>
+          <span class="pill">ClickUp</span><span class="pill">HubSpot</span><span class="pill">Workflow Automation</span>
+          <span class="pill">SQL / MySQL</span><span class="pill">Excel</span><span class="pill">Reporting & Dashboards</span>
+          <span class="pill">Knowledge Base</span><span class="pill">Chatbot (Breeze)</span><span class="pill">Selenium QA</span>
+          <span class="pill">Python</span><span class="pill">Intercom/Zendesk</span>
+        </div>
+        <h2 style="margin-top:16px">Education</h2>
+        <p id="education" data-editable>University of Arkansas — <em>Computer Science Coursework</em>, <span class="muted">2016–2019</span></p>
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2>Projects & Impact</h2>
+      <ul class="list" id="projects" data-editable>
+        <li><strong>Onboarding Engine:</strong> Built ClickUp/HubSpot playbooks, task automations, and stage gates to standardize implementation and accelerate TTV across 300+ deployments.</li>
+        <li><strong>OEM Insights Suite:</strong> Packaged SQL/Excel reports (retention, utilization, adoption) for Toyota/Lexus/Mercedes stakeholders to inform ops decisions.</li>
+        <li><strong>KB + Chatbot Program:</strong> Curated articles and Breeze flows to resolve FAQs, lowering ticket volume and boosting self‑serve success.</li>
+      </ul>
+    </section>
+
+    <footer>
+      © <script>document.write(new Date().getFullYear())</script> <span id="footerName" data-editable>Dylan Wagnon</span> · This page serves as my professional profile. 
+      Contact: <a class="link" href="mailto:dylanwagnon@outlook.com" id="footerEmail" data-editable>dylanwagnon@outlook.com</a>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Editing enabled. Remember to Save in the admin panel.</div>
+
+  <!-- Floating Admin Button -->
+  <button class="fab" id="editBtn" title="Edit website content">✏️ Edit</button>
+
+  <!-- Admin Panel (client-side only) -->
+  <div class="panel" id="adminPanel" aria-hidden="true">
+    <h3>Admin — Update Links, Avatar & Content</h3>
+    <label>Two‑Page PDF URL</label>
+    <input type="url" id="inpTwoPdf" placeholder="https://.../Dylan_Wagnon_Resume_TwoPage.pdf" />
+
+    <label>One‑Page PDF URL</label>
+    <input type="url" id="inpOnePdf" placeholder="https://.../Dylan_Wagnon_Resume_OnePage.pdf" />
+
+    <label>Two‑Page DOCX URL</label>
+    <input type="url" id="inpTwoDocx" placeholder="https://.../TwoPage.docx" />
+
+    <label>One‑Page DOCX URL</label>
+    <input type="url" id="inpOneDocx" placeholder="https://.../OnePage.docx" />
+
+    <label>Cover Letter DOCX URL</label>
+    <input type="url" id="inpCoverDocx" placeholder="https://.../CoverLetter.docx" />
+
+    <label>Profile Photo</label>
+    <div class="row">
+      <input type="file" id="inpAvatar" accept="image/*" />
+      <span class="muted">JPG/PNG. Stored locally.</span>
+    </div>
+
+    <label>Name</label>
+    <input type="text" id="inpName" placeholder="Your name" />
+
+    <label>Tagline</label>
+    <input type="text" id="inpTagline" placeholder="e.g., Business Systems Analyst · Customer Success Ops" />
+
+    <label>Email</label>
+    <input type="text" id="inpEmail" placeholder="name@example.com" />
+
+    <label>Phone</label>
+    <input type="text" id="inpPhone" placeholder="123‑456‑7890" />
+
+    <label>Admin PIN (change if you like)</label>
+    <input type="password" id="inpPin" placeholder="••••" />
+
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn" id="saveBtn">Save</button>
+      <button class="btn secondary" id="closeBtn">Close</button>
+      <button class="btn secondary danger" id="resetBtn" title="Clear saved settings on this device">Reset</button>
+    </div>
+    <p class="muted" style="margin-top:8px">Changes are saved to <strong>this device</strong> via localStorage. Re‑enter on a new device or export your HTML after saving.</p>
+  </div>
+
+  <script>
+    // localStorage keys
+    const K = {
+      twoPdf:'dw_two_pdf', onePdf:'dw_one_pdf', twoDocx:'dw_two_docx', oneDocx:'dw_one_docx', coverDocx:'dw_cover_docx',
+      avatar:'dw_avatar', name:'dw_name', tagline:'dw_tag', email:'dw_email', phone:'dw_phone', pin:'dw_pin',
+      about:'dw_about', highlights:'dw_high', experience:'dw_exp', projects:'dw_proj', skills:'dw_sk', education:'dw_ed',
+      footerName:'dw_fn', footerEmail:'dw_fe', quickNote:'dw_qn'
+    };
+
+    // Baked-in PIN
+    const DEFAULT_PIN = '9654';
+
+    // Admin unlock flag (per device)
+    const ADMIN_FLAG = 'dw_admin_unlocked';
+
+    const $ = sel => document.querySelector(sel);
+
+    // Elements
+    const adminPanel = $('#adminPanel');
+    const editBtn = $('#editBtn');
+    const saveBtn = $('#saveBtn');
+    const closeBtn = $('#closeBtn');
+    const resetBtn = $('#resetBtn');
+    const toast = $('#toast');
+
+    const twoPdf = $('#twoPdf');
+    const onePdf = $('#onePdf');
+    const twoDocx = $('#twoDocx');
+    const twoDocx2 = $('#twoDocx2');
+    const oneDocx = $('#oneDocx');
+    const coverDocx = $('#coverDocx');
+
+    const inpTwoPdf = $('#inpTwoPdf');
+    const inpOnePdf = $('#inpOnePdf');
+    const inpTwoDocx = $('#inpTwoDocx');
+    const inpOneDocx = $('#inpOneDocx');
+    const inpCoverDocx = $('#inpCoverDocx');
+
+    const avatarBox = $('#avatarBox');
+    const inpAvatar = $('#inpAvatar');
+
+    const nameEl = $('#name');
+    const taglineEl = $('#tagline');
+    const emailLink = $('#emailLink');
+    const phoneEl = $('#phone');
+    const footerName = $('#footerName');
+    const footerEmail = $('#footerEmail');
+
+    const inpName = $('#inpName');
+    const inpTagline = $('#inpTagline');
+    const inpEmail = $('#inpEmail');
+    const inpPhone = $('#inpPhone');
+    const inpPin = $('#inpPin');
+
+    const about = $('#about');
+    const highlights = $('#highlights');
+    const experience = $('#experience');
+    const projects = $('#projects');
+    const skills = $('#skills');
+    const education = $('#education');
+    const quickNote = $('#quickNote');
+
+    function enableInlineEditing(on){
+      document.querySelectorAll('[data-editable]').forEach(el=>{
+        el.setAttribute('contenteditable', on ? 'true' : 'false');
+      });
+      toast.classList.toggle('show', !!on);
+      if (on) setTimeout(()=>toast.classList.remove('show'), 3000);
+    }
+
+    // Load from storage
+    function applyFromStorage(){
+      const s = localStorage;
+      if (s.getItem(K.twoPdf)) twoPdf.href = s.getItem(K.twoPdf);
+      if (s.getItem(K.onePdf)) onePdf.href = s.getItem(K.onePdf);
+      if (s.getItem(K.twoDocx)) twoDocx.href = s.getItem(K.twoDocx), twoDocx2.href = s.getItem(K.twoDocx);
+      if (s.getItem(K.oneDocx)) oneDocx.href = s.getItem(K.oneDocx);
+      if (s.getItem(K.coverDocx)) coverDocx.href = s.getItem(K.coverDocx);
+
+      if (s.getItem(K.name)) nameEl.innerHTML = s.getItem(K.name);
+      if (s.getItem(K.tagline)) taglineEl.innerHTML = s.getItem(K.tagline);
+      if (s.getItem(K.email)) emailLink.innerHTML = s.getItem(K.email), emailLink.href = 'mailto:' + emailLink.textContent;
+      if (s.getItem(K.phone)) phoneEl.innerHTML = s.getItem(K.phone);
+      if (s.getItem(K.footerName)) footerName.innerHTML = s.getItem(K.footerName);
+      if (s.getItem(K.footerEmail)) footerEmail.innerHTML = s.getItem(K.footerEmail), footerEmail.href = 'mailto:' + footerEmail.textContent;
+
+      if (s.getItem(K.about)) about.innerHTML = s.getItem(K.about);
+      if (s.getItem(K.highlights)) highlights.innerHTML = s.getItem(K.highlights);
+      if (s.getItem(K.experience)) experience.innerHTML = s.getItem(K.experience);
+      if (s.getItem(K.projects)) projects.innerHTML = s.getItem(K.projects);
+      if (s.getItem(K.skills)) skills.innerHTML = s.getItem(K.skills);
+      if (s.getItem(K.education)) education.innerHTML = s.getItem(K.education);
+      if (s.getItem(K.quickNote)) quickNote.innerHTML = s.getItem(K.quickNote);
+
+      const av = s.getItem(K.avatar);
+      if (av){
+        avatarBox.innerHTML = '<img alt="Profile" src="'+av+'" />';
+      }
+    }
+
+    function populatePanel(){
+      const s = localStorage;
+      inpTwoPdf.value = s.getItem(K.twoPdf) || '';
+      inpOnePdf.value = s.getItem(K.onePdf) || '';
+      inpTwoDocx.value = s.getItem(K.twoDocx) || '';
+      inpOneDocx.value = s.getItem(K.oneDocx) || '';
+      inpCoverDocx.value = s.getItem(K.coverDocx) || '';
+      inpName.value = s.getItem(K.name) || nameEl.textContent;
+      inpTagline.value = s.getItem(K.tagline) || taglineEl.textContent;
+      inpEmail.value = s.getItem(K.email) || emailLink.textContent;
+      inpPhone.value = s.getItem(K.phone) || phoneEl.textContent;
+      inpPin.value = s.getItem(K.pin) || DEFAULT_PIN;
+    }
+
+    function requirePin(){
+      // If already unlocked on this device, skip prompt
+      if (localStorage.getItem('dw_admin_unlocked') === '1') return true;
+      const s = localStorage;
+      const currentPin = s.getItem(K.pin) || DEFAULT_PIN;
+      const supplied = prompt('Enter admin PIN');
+      if (supplied === null) return false; // cancelled
+      if (supplied === currentPin){
+        localStorage.setItem('dw_admin_unlocked', '1');
+        editBtn.style.display = 'inline-flex';
+        return true;
+      }
+      alert('Incorrect PIN');
+      return false;
+    }
+
+    // Avatar upload -> base64 data URL
+    inpAvatar?.addEventListener('change', (e)=>{
+      const file = e.target.files?.[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = reader.result;
+        localStorage.setItem(K.avatar, url);
+        avatarBox.innerHTML = '<img alt="Profile" src="'+url+'" />';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Save changes (links + profile + all editable content)
+    saveBtn.addEventListener('click', ()=>{
+      const s = localStorage;
+      if (inpTwoPdf.value) s.setItem(K.twoPdf, inpTwoPdf.value), twoPdf.href = inpTwoPdf.value;
+      if (inpOnePdf.value) s.setItem(K.onePdf, inpOnePdf.value), onePdf.href = inpOnePdf.value;
+      if (inpTwoDocx.value) s.setItem(K.twoDocx, inpTwoDocx.value), twoDocx.href = inpTwoDocx.value, twoDocx2.href = inpTwoDocx.value;
+      if (inpOneDocx.value) s.setItem(K.oneDocx, inpOneDocx.value), oneDocx.href = inpOneDocx.value;
+      if (inpCoverDocx.value) s.setItem(K.coverDocx, inpCoverDocx.value), coverDocx.href = inpCoverDocx.value;
+
+      if (inpName.value) s.setItem(K.name, inpName.value), nameEl.innerHTML = inpName.value;
+      if (inpTagline.value) s.setItem(K.tagline, inpTagline.value), taglineEl.innerHTML = inpTagline.value;
+      if (inpEmail.value) s.setItem(K.email, inpEmail.value), emailLink.innerHTML = inpEmail.value, emailLink.href = 'mailto:'+inpEmail.value;
+      if (inpPhone.value) s.setItem(K.phone, inpPhone.value), phoneEl.innerHTML = inpPhone.value;
+      if (inpPin.value) s.setItem(K.pin, inpPin.value);
+
+      // Save inline-edited sections
+      s.setItem(K.about, about.innerHTML);
+      s.setItem(K.highlights, highlights.innerHTML);
+      s.setItem(K.experience, experience.innerHTML);
+      s.setItem(K.projects, projects.innerHTML);
+      s.setItem(K.skills, skills.innerHTML);
+      s.setItem(K.education, education.innerHTML);
+      s.setItem(K.footerName, footerName.innerHTML);
+      s.setItem(K.footerEmail, footerEmail.innerHTML);
+      s.setItem(K.quickNote, quickNote.innerHTML);
+
+      adminPanel.classList.remove('open');
+    });
+
+    resetBtn.addEventListener('click', ()=>{
+      if (confirm('Clear saved settings on this device?')){
+        Object.values(K).forEach(k=> localStorage.removeItem(k));
+        location.reload();
+      }
+    });
+
+    // ✅ Fixed: properly wrapped click handler (no stray brace)
+    editBtn.addEventListener('click', ()=>{
+      // If unlocked, no PIN prompt; else require PIN
+      if (localStorage.getItem('dw_admin_unlocked') !== '1' && !requirePin()) return;
+      enableInlineEditing(true);
+      adminPanel.classList.toggle('open');
+      if (adminPanel.classList.contains('open')) populatePanel();
+    });
+
+    closeBtn.addEventListener('click', ()=> adminPanel.classList.remove('open'));
+
+    // Auto-open admin if URL has ?edit=1&pin=XXXX OR ?admin=PIN
+    const usp = new URLSearchParams(location.search);
+
+    // If unlocked previously on this device, reveal Edit button
+    if (localStorage.getItem('dw_admin_unlocked') === '1'){
+      editBtn.style.display = 'inline-flex';
+    }
+
+    // Secret keyboard shortcut: Ctrl+Shift+E to unlock
+    window.addEventListener('keydown', (e)=>{
+      if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e')){
+        if (requirePin()){
+          enableInlineEditing(true);
+          adminPanel.classList.add('open');
+          populatePanel();
+        }
+      }
+    });
+
+    if (usp.get('edit') === '1'){
+      const p = usp.get('pin');
+      const needs = localStorage.getItem(K.pin) || DEFAULT_PIN;
+      if (p && p === needs){
+        localStorage.setItem('dw_admin_unlocked', '1');
+        editBtn.style.display = 'inline-flex';
+        enableInlineEditing(true);
+        adminPanel.classList.add('open');
+        populatePanel();
+      }
+    }
+
+    // Alternate: ?admin=PIN just unlocks and shows the button
+    if (usp.get('admin')){
+      const p = usp.get('admin');
+      const needs = localStorage.getItem(K.pin) || DEFAULT_PIN;
+      if (p === needs){
+        localStorage.setItem('dw_admin_unlocked', '1');
+        editBtn.style.display = 'inline-flex';
+      }
+    }
+
+    // Initialize
+    applyFromStorage();
+
+    // ----------------------
+    // Minimal self-tests
+    // ----------------------
+    function runSelfTests(){
+      try{
+        console.group('[Portfolio Self‑Tests]');
+        console.assert(typeof requirePin === 'function', 'requirePin() exists');
+        console.assert(document.getElementById('editBtn'), '#editBtn exists');
+        const hidden = getComputedStyle(document.getElementById('editBtn')).display === 'none';
+        const unlocked = localStorage.getItem('dw_admin_unlocked') === '1';
+        console.assert(hidden || unlocked, 'Edit button hidden by default unless unlocked');
+        // applyFromStorage should not throw
+        applyFromStorage();
+        console.log('applyFromStorage(): OK');
+        console.groupEnd();
+      }catch(err){
+        console.error('Self‑tests failed:', err);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', runSelfTests);
+  </script>
+</body>
+</html>
