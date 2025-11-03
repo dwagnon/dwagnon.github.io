@@ -6,154 +6,209 @@
   <title>Dylan Wagnon — Resume</title>
   <style>
     :root {
-      --ink: #0f172a;      /* slate-900 */
-      --muted: #475569;    /* slate-600 */
-      --accent: #2563eb;   /* blue-600 */
-      --paper: #ffffff;
-      --rule: #e2e8f0;     /* slate-200 */
-      --chip: #f1f5f9;     /* slate-100 */
+      --bg: #0b1020;           /* deep space */
+      --bg2: #0f172a;          /* slate-900 tint */
+      --card: #0e1326;
+      --ink: #e5e7eb;          /* gray-200 */
+      --muted: #94a3b8;        /* slate-400 */
+      --rule: rgba(148,163,184,.16);
+      --accent: #7dd3fc;       /* sky-300 */
+      --accent-2: #60a5fa;     /* blue-400 */
+      --chip: rgba(99,102,241,.15);
+      --shadow: 0 20px 60px rgba(2, 6, 23, .6);
+      --radius: 16px;
     }
+
     html, body { height: 100%; }
     body {
-      margin: 0; background: var(--paper); color: var(--ink);
-      font: 15px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      margin: 0; color: var(--ink);
+      background: radial-gradient(1200px 800px at 20% -10%, #1e293b 0%, transparent 60%),
+                  radial-gradient(900px 700px at 120% 0%, #0ea5e9 0%, transparent 50%),
+                  linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      font: 15px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
+
     .page {
-      max-width: 900px; margin: 40px auto; padding: 32px 40px;
-      border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
+      max-width: 920px; margin: 56px auto; padding: 0; border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid var(--rule); box-shadow: var(--shadow); overflow: hidden;
     }
-    h1, h2 { margin: 0 0 8px; line-height: 1.25; }
-    h1 { font-size: 28px; letter-spacing: .2px; }
-    h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-top: 24px; }
-    .subtle { color: var(--muted); }
-    .topline { display: grid; grid-template-columns: 1fr; gap: 6px; border-bottom: 1px solid var(--rule); padding-bottom: 16px; margin-bottom: 18px; }
-    .contact { display: flex; flex-wrap: wrap; gap: 10px 16px; }
-    .chip { background: var(--chip); padding: 4px 10px; border-radius: 999px; }
-    .section { margin: 10px 0 0; }
-    ul { margin: 8px 0 0 18px; }
-    li { margin: 4px 0; }
-    .role { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    .role b { font-weight: 600; }
+
+    .header {
+      padding: 28px 32px 18px 32px; position: relative; border-bottom: 1px solid var(--rule);
+      background: linear-gradient(180deg, rgba(96,165,250,.12), rgba(96,165,250,.04));
+    }
+    h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; letter-spacing: .2px; }
+    .subtitle { color: var(--muted); font-size: 14px; }
+
+    .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; padding: 20px 32px 28px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+    h2 {
+      font-size: 13px; text-transform: uppercase; letter-spacing: .18em; color: var(--muted);
+      margin: 18px 0 10px; position: relative;
+    }
+    h2::after { content: ""; display: block; height: 1px; background: var(--rule); margin-top: 8px; }
+
+    .section { background: transparent; padding: 10px 0 0; }
+    .card { background: rgba(255,255,255,.03); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; }
+
+    .row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .where { color: var(--muted); }
+    .bullets { margin: 8px 0 0 18px; }
+    .bullets li { margin: 4px 0; }
 
-    /* Editing state visuals */
+    .contact { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 6px; }
+    .contact a { color: var(--ink); text-decoration: none; border-bottom: 1px dashed rgba(125,211,252,.5); }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 6px 10px; border-radius: 999px; background: var(--chip); border: 1px solid var(--rule); font-size: 12px; }
+
+    /* Editing affordances */
     [data-editable] { outline: none; }
-    body:not(.editing) [data-editable] { cursor: default; }
-    body.editing [data-editable]:hover { outline: 1px dashed #94a3b8; }
+    body.editing [data-editable]:hover { outline: 1px dashed rgba(125,211,252,.6); outline-offset: 2px; }
 
-    /* Hidden floating dev controls (only appear in editing mode) */
+    /* Hidden toolbar (visible only in editing mode) */
     .toolbar {
-      position: fixed; inset: auto 20px 20px auto; display: none;
-      background: #0b1220; color: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 10px 20px rgba(0,0,0,.2);
-      gap: 8px; align-items: center; font-size: 13px;
+      position: fixed; inset: auto 24px 24px auto; display: none; z-index: 40;
+      background: rgba(15,23,42,.9); color: #e2e8f0; border-radius: 14px; padding: 10px; border: 1px solid var(--rule);
+      backdrop-filter: blur(8px); box-shadow: var(--shadow); gap: 8px; align-items: center; font-size: 13px;
     }
-    .toolbar button { appearance: none; border: 1px solid rgba(255,255,255,.18); background: transparent; color: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
-    .toolbar button:hover { background: rgba(255,255,255,.08); }
+    .toolbar button { appearance: none; border: 1px solid var(--rule); background: rgba(255,255,255,.04); color: #e2e8f0; padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+    .toolbar button:hover { background: rgba(255,255,255,.1); }
     body.editing .toolbar { display: inline-flex; }
 
-    /* Print */
+    /* Print (invert to clean light doc) */
     @media print {
-      .page { box-shadow: none; border: none; border-radius: 0; margin: 0; }
+      body { background: #ffffff; color: #0f172a; }
+      .page { box-shadow: none; border: none; border-radius: 0; margin: 0; background: #fff; }
+      .header { background: #fff; border-bottom: 1px solid #e2e8f0; }
+      h2 { color: #475569; }
       .toolbar { display: none !important; }
+      .chip { background: #f1f5f9; color: #0f172a; }
+      .contact a { color: #0f172a; border-color: #94a3b8; }
     }
   </style>
 </head>
 <body>
   <main class="page" id="page">
-    <header class="topline">
-      <div>
-        <h1 data-editable>**Dylan Wagnon**</h1>
-        <div class="contact subtle" data-editable>
-          <span>1300 North Custer Rd</span>
-          <span>Allen, TX 75013</span>
-          <span>501-606-9654</span>
-          <span><a href="mailto:dylanwagnon@outlook.com">dylanwagnon@outlook.com</a></span>
-        </div>
+    <header class="header">
+      <h1 data-editable>Dylan Wagnon</h1>
+      <div class="contact" data-editable>
+        <span>Allen, TX</span>
+        <span>•</span>
+        <span>501‑606‑9654</span>
+        <span>•</span>
+        <a href="mailto:dylanwagnon@outlook.com">dylanwagnon@outlook.com</a>
+      </div>
+      <div class="subtitle" data-editable>
+        Business Systems Analyst & Technical Liaison — SaaS operations, CRM automation, and process optimization.
       </div>
     </header>
 
-    <section class="section">
-      <h2>Education</h2>
-      <div data-editable>
-        <b>Bachelor of Science in Computer Science</b><br/>
-        University of Arkansas, Fayetteville, AR | 2020
-      </div>
-    </section>
+    <section class="grid">
+      <!-- LEFT COLUMN -->
+      <div>
+        <section class="section">
+          <h2>Professional Summary</h2>
+          <div class="card" data-editable>
+            Business Systems Analyst and Technical Liaison with a proven record driving SaaS operations, CRM automation, and process optimization. Experienced aligning product, support, and operations to scale onboarding, enhance customer experience, and deliver data‑driven insights for leadership and partners. Comfortable owning cross‑functional initiatives, writing SQL for reporting and diagnostics, and collaborating with developers to ship durable fixes and automations.
+          </div>
+        </section>
 
-    <section class="section">
-      <h2>Professional Experience</h2>
+        <section class="section">
+          <h2>Professional Experience</h2>
 
-      <div class="role" data-editable>
-        <div>
-          <b>Technical Support Specialist</b>
-          <span class="where">— Logitrac</span>
-        </div>
-        <div class="where">Plano, TX | 02/01/23–Present</div>
-      </div>
-      <ul data-editable>
-        <li>Provide expert technical support for luxury dealerships (Lexus, Mercedes-Benz, Jaguar Land Rover) using a loaner vehicle management platform.</li>
-        <li>Diagnose complex issues and handle escalated tickets that cannot be resolved by tier 1 support.</li>
-        <li>Utilize SQL and MySQL to edit and navigate databases, resolving technical issues.</li>
-        <li>Lead onboarding and training for new clients, remotely and on-site, ensuring smooth platform adoption.</li>
-        <li>Collaborate with development teams to replicate and document bugs, assisting in the resolution.</li>
-        <li>Automate QA testing using Selenium to ensure stability and functionality after platform updates.</li>
-        <li>Conduct post-update testing and validation to ensure platform integrity and user satisfaction.</li>
-      </ul>
+          <div class="card" data-editable>
+            <div class="row">
+              <div><b>Business Systems Analyst (Technical Liaison Manager)</b> — Logitrac</div>
+              <div class="where">Plano, TX | Mar 2025 – Present</div>
+            </div>
+            <ul class="bullets">
+              <li>Expanded scope from support to business operations and systems strategy, designing workflows in CRM and HubSpot to streamline Sales, Onboarding, and Helpdesk operations.</li>
+              <li>Automated onboarding tasks, enabling the successful implementation of 300+ dealerships with reduced manual workload and improved client satisfaction.</li>
+              <li>Created retention, adoption, and performance dashboards for leadership and OEM stakeholders to track dealership loaner program success.</li>
+              <li>Built knowledge base articles and chatbot logic, reducing common support inquiries.</li>
+              <li>Collaborated with Finance on custom SQL reporting for billing, tolling, and dealership expense recovery.</li>
+            </ul>
+          </div>
 
-      <div class="role" data-editable style="margin-top:14px;">
-        <div>
-          <b>Online Video Game Tournaments & Team Management</b>
-        </div>
-        <div class="where">07/2020–12/2023</div>
-      </div>
-      <ul data-editable>
-        <li>Competed in online video game tournaments, demonstrating teamwork, communication, and strategic adaptability.</li>
-        <li>Managed and recruited an amateur Call of Duty team composed of college players that competed at the amateur level and later fed into the pro league.</li>
-        <li>Led strategy, coordination, and development to foster collaboration and competitive success.</li>
-      </ul>
+          <div class="card" style="margin-top:12px;" data-editable>
+            <div class="row">
+              <div><b>Business Development Manager</b> — Logitrac</div>
+              <div class="where">Jan 2025 – Mar 2025</div>
+            </div>
+            <ul class="bullets">
+              <li>Managed and optimized vendor partnerships; developed integration roadmaps with 3rd‑party systems to expand Logitrac’s ecosystem.</li>
+              <li>Delivered strategic reports for OEMs (Toyota, Lexus, Mercedes), helping identify adoption trends and process gaps in dealership service operations.</li>
+              <li>Provided data insights to leadership to guide product roadmap and revenue opportunities.</li>
+            </ul>
+          </div>
 
-      <div class="role" data-editable style="margin-top:14px;">
-        <div>
-          <b>Marketing Team Member</b>
-          <span class="where">— Academy Sports + Outdoors</span>
-        </div>
-        <div class="where">Fayetteville, AR | 06/2019–07/2020</div>
-      </div>
-      <ul data-editable>
-        <li>Managed store displays and collaborated on marketing initiatives to drive sales.</li>
-        <li>Excelled in sales by promoting store credit cards and consistently achieving high sign‑up numbers.</li>
-      </ul>
+          <div class="card" style="margin-top:12px;" data-editable>
+            <div class="row">
+              <div><b>Technical Support Specialist</b> — Logitrac</div>
+              <div class="where">Feb 2023 – Dec 2024</div>
+            </div>
+            <ul class="bullets">
+              <li>Handled escalated Tier 2 issues, leveraging SQL/MySQL to resolve database‑level problems.</li>
+              <li>Led QA testing (manual + automated via Selenium) to ensure platform stability post‑release.</li>
+              <li>Conducted client onboarding and training (remote + onsite), ensuring smooth adoption.</li>
+              <li>Partnered with development to replicate/document bugs and push faster fixes into production.</li>
+            </ul>
+          </div>
 
-      <div class="role" data-editable style="margin-top:14px;">
-        <div>
-          <b>Personal Online Grocery Shopper</b>
-          <span class="where">— Walmart</span>
-        </div>
-        <div class="where">Fayetteville, AR | 05/2018–01/2019</div>
+          <div class="card" style="margin-top:12px;" data-editable>
+            <div class="row">
+              <div><b>Additional Experience</b></div>
+              <div class="where">2018 – 2023</div>
+            </div>
+            <ul class="bullets">
+              <li>Academy Sports & Outdoors — Marketing Team Member (2019–2020)</li>
+              <li>Walmart — Personal Online Shopper (2018–2019)</li>
+              <li>Online Video Game Team Management (2020–2023)</li>
+            </ul>
+          </div>
+        </section>
       </div>
-      <ul data-editable>
-        <li>Gathered and prepared customer orders with a focus on accuracy and efficiency.</li>
-        <li>Demonstrated excellent organizational and customer service skills in a fast‑paced environment.</li>
-      </ul>
-    </section>
 
-    <section class="section">
-      <h2>Technical Skills</h2>
-      <div class="chips" data-editable>
-        <div class="chip">SQL</div>
-        <div class="chip">MySQL</div>
-        <div class="chip">Python</div>
-        <div class="chip">HTML/CSS</div>
-        <div class="chip">Selenium</div>
-        <div class="chip">Database Troubleshooting</div>
-        <div class="chip">Microsoft Excel</div>
-        <div class="chip">ClickUp</div>
-        <div class="chip">Intercom</div>
-        <div class="chip">Zendesk</div>
-      </div>
-      <div class="subtle" style="margin-top:8px;" data-editable>
-        <b>General Skills:</b> Problem‑solving, technical troubleshooting, clear written & verbal communication.
-      </div>
+      <!-- RIGHT COLUMN -->
+      <aside>
+        <section class="section">
+          <h2>Education</h2>
+          <div class="card" data-editable>
+            University of Arkansas — Computer Science Coursework, 2016–2019
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Technical Skills</h2>
+          <div class="card">
+            <div class="chips" data-editable>
+              <span class="chip">SQL</span>
+              <span class="chip">MySQL</span>
+              <span class="chip">Excel</span>
+              <span class="chip">Reporting for OEMs</span>
+              <span class="chip">HubSpot Automation</span>
+              <span class="chip">CRM Workflows</span>
+              <span class="chip">Selenium QA</span>
+              <span class="chip">Python</span>
+              <span class="chip">HTML/CSS</span>
+              <span class="chip">Intercom</span>
+              <span class="chip">Zendesk</span>
+              <span class="chip">Salesforce (familiar)</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>General</h2>
+          <div class="card" data-editable>
+            Strong problem solving • Team & Partner collaboration • CRM management • Documentation & training
+          </div>
+        </section>
+      </aside>
     </section>
   </main>
 
@@ -161,20 +216,19 @@
   <div class="toolbar" id="toolbar" aria-hidden="true">
     <span id="modeLabel">Editing</span>
     <button id="saveBtn" title="Download HTML with your edits">Save</button>
+    <button id="pdfBtn" title="Export to PDF (browser print)">PDF</button>
     <button id="exitBtn" title="Exit editing mode (content locks)">Exit</button>
   </div>
 
   <script>
     (function(){
       // --- Config ---
-      const PASSCODE_PLAINTEXT = "9654"; // You requested this passcode
+      const PASSCODE_PLAINTEXT = "9654"; // your passcode
       const SESSION_FLAG = "dw_resume_authed_v1";
 
-      // --- State helpers ---
       const isAuthed = () => sessionStorage.getItem(SESSION_FLAG) === "1";
       const setAuthed = (v) => sessionStorage.setItem(SESSION_FLAG, v ? "1" : "0");
 
-      // Apply contenteditable when in editing mode
       function setEditing(on) {
         document.body.classList.toggle('editing', !!on);
         document.querySelectorAll('[data-editable]')
@@ -182,12 +236,9 @@
         document.getElementById('toolbar').setAttribute('aria-hidden', on ? 'false' : 'true');
       }
 
-      // Prompt for passcode (hidden trigger)
       async function requestAuth() {
-        // Use a prompt to keep UI invisible otherwise
         const code = window.prompt('Enter passcode to enable private editing:');
         if (code === null) return false;
-        // simple constant‑time-ish compare for tiny obfuscation
         if (String(code).trim() === PASSCODE_PLAINTEXT) {
           setAuthed(true);
           setEditing(true);
@@ -197,45 +248,40 @@
         return false;
       }
 
-      // Keyboard shortcut: Ctrl + Shift + E to toggle editing (auth once per session)
+      // Shortcut: Ctrl + Shift + E
       window.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
           e.preventDefault();
-          if (!isAuthed()) {
-            requestAuth();
-          } else {
-            // Toggle editing quickly if already authed
-            setEditing(!document.body.classList.contains('editing'));
-          }
+          if (!isAuthed()) { requestAuth(); }
+          else { setEditing(!document.body.classList.contains('editing')); }
         }
       }, { passive: false });
 
       // Toolbar actions
       document.getElementById('exitBtn').addEventListener('click', () => setEditing(false));
+
       document.getElementById('saveBtn').addEventListener('click', () => {
-        // Create a downloadable copy of the current HTML
-        // Temporarily ensure locked view (no toolbar/outline) in the exported HTML
         const wasEditing = document.body.classList.contains('editing');
         setEditing(false);
-
-        const html = '<!DOCTYPE html>' + '\n' + document.documentElement.outerHTML;
+        const html = '<!DOCTYPE html>
+' + document.documentElement.outerHTML;
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
-        const a = Object.assign(document.createElement('a'), { href: url, download: 'resume.html' });
+        const a = Object.assign(document.createElement('a'), { href: url, download: 'resume-dark.html' });
         document.body.appendChild(a); a.click(); a.remove();
         URL.revokeObjectURL(url);
-
-        // restore editing state if it was on
         if (wasEditing) setEditing(true);
       });
 
-      // Initial lock (no visible edit affordance). Nothing shows unless you use Ctrl+Shift+E.
-      setEditing(false);
+      document.getElementById('pdfBtn').addEventListener('click', () => {
+        const wasEditing = document.body.classList.contains('editing');
+        setEditing(false);
+        window.print();
+        if (wasEditing) setEditing(true);
+      });
 
-      // Optional: if already authed this session, allow quick toggle with the shortcut immediately
-      if (isAuthed()) {
-        // remain locked until you toggle with the shortcut
-      }
+      // Initial lock
+      setEditing(false);
     })();
   </script>
 </body>
